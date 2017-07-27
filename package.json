@@ -1,0 +1,27 @@
+{
+  "name": "duanzi_monitor_system",
+  "version": "1.0.0",
+  "description": "### 目标 对于煎蛋网段子的监控、爬取、存储和展示",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --exec babel-node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wk633/duanziMonitorSystem.git"
+  },
+  "keywords": [
+    "nodejs"
+  ],
+  "author": "Kai Wang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wk633/duanziMonitorSystem/issues"
+  },
+  "homepage": "https://github.com/wk633/duanziMonitorSystem#readme",
+  "devDependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1"
+  }
+}
