@@ -5,6 +5,8 @@ import superagent from 'superagent';
 import cheerio from 'cheerio';
 import mapLimit from 'async/mapLimit';
 
+import {sendToQueue} from './utils/send';
+
 const baseUrl = 'http://jandan.net/duan';
 var currentCount = 0;
 
@@ -20,7 +22,7 @@ superagent.get(baseUrl)
 
     // generate url, test first 20 page
     let urls = [];
-    for(let i = currentMaximumPage; i > currentMaximumPage-10; i--) {
+    for(let i = currentMaximumPage; i > currentMaximumPage-3; i--) {
         let url = "http://jandan.net/duan/page-" + i;
         urls.push(url);
     }
@@ -52,7 +54,8 @@ function crawlAndParsePage(url, callback) {
         }
         let $ = cheerio.load(response.text);
         let duanziStore = duanziExtraction($);
-
+        let idArray = duanziStore.map(item=>item.duanziId)
+        sendToQueue("duanziList", idArray);
 
         // store
         if (args.mongodb == false) {
