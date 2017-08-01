@@ -1,6 +1,7 @@
 import mapLimit from 'async/mapLimit';
 import superagent from 'superagent';
 import mongoConnect from './utils/mongoConnect';
+import {config} from './config';
 
 var amqp = require('amqplib');
 
@@ -20,7 +21,7 @@ function doWork(msg) {
 
     // async crawl
     var self = this;
-    mapLimit(duanziList, 3,
+    mapLimit(duanziList, config.concurrent,
     (id, callback)=>{
         console.log("current duanziId is " + id);
         superagent.get("http://jandan.net/tucao/" + id)
@@ -28,7 +29,7 @@ function doWork(msg) {
             if (err) {
                 console.log("get tucao failed, id = " + id);
                 console.log(err);
-                let delay = Math.random()*2000;
+                let delay = Math.random()*config.interval;
                 setTimeout(function(){
                     callback(null, {
                         failed: true,
@@ -39,7 +40,7 @@ function doWork(msg) {
             }else {
                 let res = JSON.parse(response.text);
                 // create a random delay and call callback function
-                let delay = Math.random()*2000;
+                let delay = Math.random()*config.interval;
                 setTimeout(function(){
                     callback(null, {
                         tucao: res['tucao'],

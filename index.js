@@ -1,3 +1,4 @@
+import {config} from './config';
 import mongoConnect from './utils/mongoConnect';
 import args from './utils/args';
 import fs from 'fs';
@@ -22,14 +23,14 @@ superagent.get(baseUrl)
 
     // generate url, test first 20 page
     let urls = [];
-    for(let i = currentMaximumPage; i > currentMaximumPage-3; i--) {
+    for(let i = currentMaximumPage; i > currentMaximumPage-config.page; i--) {
         let url = "http://jandan.net/duan/page-" + i;
         urls.push(url);
     }
     console.log(urls.length);
 
     // async crawl
-    mapLimit(urls, 3,
+    mapLimit(urls, config.interval,
     (url, callback)=>{
         console.log("current url is " + url);
         crawlAndParsePage(url, callback);
@@ -88,7 +89,7 @@ function crawlAndParsePage(url, callback) {
         }
 
         // create a random delay and call callback function
-        let delay = Math.random()*2000;
+        let delay = Math.random()*config.interval;
         setTimeout(function(){
             currentCount--;
             callback(null, "url is " + url + " delay is " + delay);
