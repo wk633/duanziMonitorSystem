@@ -8,7 +8,7 @@ import mapLimit from 'async/mapLimit';
 
 import {sendToQueue} from './utils/send';
 
-const baseUrl = 'http://jandan.net/duan';
+const baseUrl = config.baseUrl;
 var currentCount = 0;
 
 superagent.get(baseUrl)
@@ -56,18 +56,18 @@ function crawlAndParsePage(url, callback) {
         let $ = cheerio.load(response.text);
         let duanziStore = duanziExtraction($);
         let idArray = duanziStore.map(item=>item.duanziId)
-        sendToQueue("duanziList", idArray);
+        sendToQueue(config.duanziListQueueName, idArray);
 
         // store
         if (args.mongodb == false) {
             // use file to store data
             fs.appendFileSync(args.file, JSON.stringify(duanziStore)+"\n")
         }else{
-            mongoConnect("mongodb://localhost:27017/duanzi")
+            mongoConnect(config.mongodbAddr)
             .then(
                 async (db)=>{
                     try {
-                        const collection = db.collection('jandan');
+                        const collection = db.collection(config.duanziCollectionName);
                         const res = await collection.insertMany(duanziStore);
                         console.log("save content from " + url +" success");
                     }

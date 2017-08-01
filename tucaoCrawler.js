@@ -71,11 +71,11 @@ function doWork(msg) {
 }
 
 function saveToMongoDB(result){
-    mongoConnect("mongodb://localhost:27017/duanzi")
+    mongoConnect(config.mongodbAddr)
     .then(
         async (db)=>{
             try {
-                const collection = db.collection('tucao');
+                const collection = db.collection(config.tucaoCollectionName);
                 const res = await collection.insertMany(result);
                 console.log("save tucao success");
             }
